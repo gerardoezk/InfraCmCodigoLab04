@@ -1,0 +1,59 @@
+---
+- name: Configurar NGINX proxy con 3 backends
+  hosts: localhost
+  gather_facts: false
+  vars:
+    project_root: "{{ playbook_dir }}/.."
+    nginx_conf_host: "{{ project_root }}/host_volumes/nginx_conf/"
+    web1_host: "{{ project_root }}/host_volumes/web1"
+    web2_host: "{{ project_root }}/host_volumes/web2"
+    web3_host: "{{ project_root }}/host_volumes/web3"
+    nginx_container: "proxy"
+
+  tasks:
+    - name: Crear directorios para proxy y webs
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - "{{ nginx_conf_host }}"
+        - "{{ web1_host }}"
+        - "{{ web2_host }}"
+        - "{{ web3_host }}"
+
+    - name: Copiar web1
+      ansible.builtin.copy:
+        src: "files/index1.html"
+        dest: "{{ web1_host }}/index.html"
+        mode: '0644'
+
+    - name: Copiar web2
+      ansible.builtin.copy:
+        src: "files/index2.html"
+        dest: "{{ web2_host }}/index.html"
+        mode: '0644'
+
+    - name: Copiar web3
+      ansible.builtin.copy:
+        src: "files/index3.html"
+        dest: "{{ web3_host }}/index.html"
+        mode: '0644'
+
+    - name: Copiar configuración del proxy
+      ansible.builtin.copy:
+        src: "templates/nginx.conf"
+        dest: "{{ nginx_conf_host }}/default.conf"
+        mode: '0644'
+
+    - name: Recargar NGINX en el proxy
+      ansible.builtin.command:
+        docker exec {{ nginx_container }} nginx -s reload
+      register: reload_result
+      changed_when: reload_result.rc == 0
+      failed_when: false
+
+    - name: Reiniciar proxy si recarga falla
+      ansible.builtin.command:
+        docker restart {{ nginx_container }}
+      when: reload_result.rc != 0
