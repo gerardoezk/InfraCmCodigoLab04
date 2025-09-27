@@ -23,6 +23,6 @@ resource "docker_container" "postgres" {
   env = [
     "POSTGRES_DB=myapp",         # Nombre de la base de datos inicial
     "POSTGRES_USER=postgres",    # Usuario administrador
-    "POSTGRES_PASSWORD=password" # Contraseña del usuario administrador
-  ]
+    "POSTGRES_PASSWORD=password" # Contraseña del usuario administrador ¡OJO! En PROD, este valor debe externalizarse a una variable sensible o Vault.
 }
+
