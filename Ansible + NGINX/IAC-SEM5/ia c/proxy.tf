@@ -21,6 +21,7 @@ resource "docker_container" "proxy" {
   }
 
 # Monta un volumen para persistir o proporcionar archivos de configuración.
+# La ruta del host debe coincidir con la variable 'nginx_conf_host' en el playbook.yaml
   volumes
   volumes {
     host_path      = abspath("${path.module}/../host_volumes/nginx_conf")    # Ruta de la carpeta en la máquina host
@@ -29,3 +30,4 @@ resource "docker_container" "proxy" {
   }
 
 }
+
