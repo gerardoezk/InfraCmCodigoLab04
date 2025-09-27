@@ -1,5 +1,6 @@
 # InfraCmCodigoLab05
-INTEGRANTES:
+
+#INTEGRANTES:
 Caipo Trujillo, Sonia Fernanda
 Leyva Sandoval, Piero Alejandro 
 Asunción Chira, Luis Gerardo 
@@ -8,13 +9,13 @@ Vera Romero, Vanesa Marili
 
 Markdown
 
-# 🚀 InfraCmCodigoLab05: Ansible + NGINX con Terraform (IaC)
+# InfraCmCodigoLab05: Ansible + NGINX con Terraform (IaC)
 
 Este repositorio contiene un proyecto de **Infraestructura como Código (IaC)**, diseñado para desplegar la infraestructura base con **Terraform** y luego configurar un servidor **NGINX** como servidor web/proxy utilizando **Ansible**.
 
 ---
 
-## 📂 Estructura del Proyecto
+## Estructura del Proyecto
 
 El proyecto está organizado en dos directorios principales: **`configuracion`** (para la automatización con Ansible) e **`iac`** (para el aprovisionamiento con Terraform).
 
