@@ -1,13 +1,12 @@
 # InfraCmCodigoLab05
 
-#INTEGRANTES:
+# INTEGRANTES:
+
 Caipo Trujillo, Sonia Fernanda
 Leyva Sandoval, Piero Alejandro 
 Asunción Chira, Luis Gerardo 
 Rodriguez Malca, Rodrigo Abel
 Vera Romero, Vanesa Marili 
-
-Markdown
 
 # InfraCmCodigoLab05: Ansible + NGINX con Terraform (IaC)
 
