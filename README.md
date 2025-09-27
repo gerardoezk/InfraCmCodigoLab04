@@ -18,9 +18,13 @@ Este repositorio contiene un proyecto de **Infraestructura como Código (IaC)**,
 
 El proyecto está organizado en dos directorios principales: **`configuracion`** (para la automatización con Ansible) e **`iac`** (para el aprovisionamiento con Terraform).
 
+
 Ansible + NGINX/
+
 ├── IAC-SEM5/
+
 │   ├── configuracion/
+
 │   │   ├── files/
 │   │   │   ├── index1.html       # Archivo estático 
 
