@@ -3,10 +3,15 @@
 # INTEGRANTES:
 
 Caipo Trujillo, Sonia Fernanda
+
 Leyva Sandoval, Piero Alejandro 
+
 Asunción Chira, Luis Gerardo 
+
 Rodriguez Malca, Rodrigo Abel
+
 Vera Romero, Vanesa Marili 
+
 
 # InfraCmCodigoLab05: Ansible + NGINX con Terraform (IaC)
 
@@ -32,12 +37,16 @@ Ansible + NGINX/
 
 │   │   │   └── index3.html       # Archivo estático 
 
-
 │   │   ├── templates/
+
 │   │   │   └── nginx.conf        # Plantilla de configuración de NGINX
+
 │   │   ├── inventory.ini         # Inventario de Ansible (localhost por defecto)
+
 │   │   └── playbook.yaml         # Playbook principal de Ansible
+
 │   └── iac/
+
 │       ├── grafana.tf            # Terraform para Grafana 
 
 │       ├── main.tf               # Configuración principal de Terraform 
