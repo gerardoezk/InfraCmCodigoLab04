@@ -6,103 +6,98 @@ Asunción Chira, Luis Gerardo
 Rodriguez Malca, Rodrigo Abel
 Vera Romero, Vanesa Marili 
 
-Ansible + NGINX: Proyecto de Infraestructura como Código (IaC)
-Este repositorio contiene un proyecto de 
+Markdown
 
-Infraestructura como Código (IaC), probablemente para el laboratorio InfraCmCodigoLab05 (según el título), diseñado para desplegar y configurar un servidor NGINX utilizando Ansible. Además, incluye archivos de 
+# 🚀 InfraCmCodigoLab05: Ansible + NGINX con Terraform (IaC)
 
-Terraform para provisionar otros componentes de infraestructura (bases de datos, proxies, etc.).
+Este repositorio contiene un proyecto de **Infraestructura como Código (IaC)**, diseñado para desplegar la infraestructura base con **Terraform** y luego configurar un servidor **NGINX** como servidor web/proxy utilizando **Ansible**.
 
-Estructura del Proyecto
-El proyecto está organizado en dos directorios principales: 
+---
 
-configuracion (para tareas de Ansible) e iac (para aprovisionamiento con Terraform).
+## 📂 Estructura del Proyecto
+
+El proyecto está organizado en dos directorios principales: **`configuracion`** (para la automatización con Ansible) e **`iac`** (para el aprovisionamiento con Terraform).
 
 Ansible + NGINX/
 ├── IAC-SEM5/
 │   ├── configuracion/
 │   │   ├── files/
-│   │   │   ├── index1.html
-│   │   │   ├── index2.html
-│   │   │   └── index3.html       # Archivos estáticos para servir con NGINX [cite: 3, 4]
+│   │   │   ├── index1.html       # Archivo estático 
+
+│   │   │   ├── index2.html       # Archivo estático 
+
+│   │   │   └── index3.html       # Archivo estático 
+
+
 │   │   ├── templates/
-│   │   │   └── nginx.conf        # Plantilla de configuración de NGINX con Jinja2 
-│   │   ├── inventory.ini         # Inventario de Ansible (configurado para 'localhost' inicialmente) 
-│   │   └── playbook.yaml         # Playbook principal de Ansible para la configuración 
+│   │   │   └── nginx.conf        # Plantilla de configuración de NGINX
+│   │   ├── inventory.ini         # Inventario de Ansible (localhost por defecto)
+│   │   └── playbook.yaml         # Playbook principal de Ansible
 │   └── iac/
-│       ├── grafana.tf            # Terraform para Grafana [cite: 6]
-│       ├── main.tf               # Configuración principal de Terraform [cite: 6]
-│       ├── networks.tf           # Terraform para la configuración de red 
-│       ├── nginx.tf              # Terraform para el aprovisionamiento de la instancia NGINX 
+│       ├── grafana.tf            # Terraform para Grafana 
+
+│       ├── main.tf               # Configuración principal de Terraform 
+
+│       ├── networks.tf           # Terraform para configuración de red 
+
+│       ├── nginx.tf              # Terraform para la instancia NGINX 
+
 │       ├── postgre.tf            # Terraform para PostgreSQL 
+
 │       ├── proxy.tf              # Terraform para un servicio proxy 
+
 │       └── redis.tf              # Terraform para Redis 
+
+
 └── README.md
-🛠️ Configuración con Ansible
-El directorio 
-
-configuracion contiene el código de automatización para instalar y configurar NGINX en el servidor de destino.
-
-Componentes Clave de Ansible
-Archivo	Descripción
-playbook.yaml	Define los pasos de automatización: instalar NGINX, copiar el archivo de configuración (nginx.conf) a partir de la plantilla y desplegar los archivos HTML estáticos (index*.html).
-inventory.ini	
-Define el host de destino. El snippet indica ejecución local: 
-
-localhost ansible_connection=local.
-
-templates/nginx.conf	
-Plantilla 
-
-Jinja2 (nginx.conf.j2) para generar la configuración final de NGINX.
 
 
-Exportar a Hojas de cálculo
-Ejecución del Playbook
-Asegúrate de tener Ansible instalado.
+---
 
-Navega al directorio configuracion.
+## 🛠️ Configuración con Ansible
 
-Ejecuta el playbook con el comando:
+El directorio `configuracion` contiene el código de automatización para **instalar y configurar NGINX** en el servidor de destino[cite: 10].
 
-Bash
+### Componentes Clave de Ansible
 
-ansible-playbook -i inventory.ini playbook.yaml
-☁️ Aprovisionamiento de Infraestructura con Terraform
-El directorio iac contiene la configuración de Terraform para provisionar la infraestructura base necesaria, incluyendo servicios como bases de datos, caché y monitorización.
+| Archivo | Propósito | Contenido Inferido |
+| :--- | :--- | :--- |
+| **`playbook.yaml`** | Orquestación de tareas. | Instalar NGINX, copiar configuración (`nginx.conf`) y archivos estáticos (`index*.html`). |
+| **`inventory.ini`** | Define el host. | `localhost ansible_connection=local`  (Ejecución local) |
+| **`templates/`** | Contiene plantillas. | `nginx.conf` (Plantilla Jinja2) para la configuración de NGINX. |
+| **`files/`** | Contiene archivos estáticos. | Los archivos HTML que NGINX servirá[cite: 3, 4]. |
 
-Servicios de Infraestructura
-Archivo	Propósito
-nginx.tf / main.tf	
-Aprovisionamiento de la instancia donde se ejecutará NGINX y configuración principal.
+### Ejecución del Playbook
 
-networks.tf	
-Definición de redes y subredes para los servicios.
+1.  Asegúrate de tener **Ansible instalado**.
+2.  Navega al directorio **`configuracion`**.
+3.  Ejecuta el playbook:
 
-postgre.tf	
-Configuración del servicio de base de datos 
+    ```bash
+    ansible-playbook -i inventory.ini playbook.yaml
+    ```
 
-PostgreSQL.
+---
 
+## ☁️ Aprovisionamiento de Infraestructura con Terraform
 
-redis.tf	
-Configuración del servicio de caché 
+El directorio **`iac`** contiene la configuración de **Terraform** para provisionar los recursos subyacentes en la nube o local.
 
-Redis.
+### Servicios de Infraestructura
 
-grafana.tf / proxy.tf	
-Configuración de servicios auxiliares como 
+| Archivo | Descripción del Recurso |
+| :--- | :--- |
+| `nginx.tf` | Aprovisiona la VM o contenedor para NGINX. |
+| `postgre.tf` | Aprovisiona el servicio de base de datos **PostgreSQL**. |
+| `redis.tf` | Aprovisiona el servicio de caché o base de datos en memoria **Redis**. |
+| `grafana.tf` | Aprovisiona la instancia de **Grafana** para monitorización. |
+| `networks.tf` | Define la configuración de redes y subredes. |
 
-Grafana (monitorización) y un posible Proxy/Load Balancer adicional.
+### Pasos para Aprovisionar (Conceptual)
 
+1.  Asegúrate de tener **Terraform instalado** y las credenciales configuradas.
+2.  Navega al directorio **`iac`**.
+3.  Inicializa Terraform: `terraform init`
+4.  Aplica la configuración: `terraform apply`
 
-
-Exportar a Hojas de cálculo
-Pasos para Aprovisionar (Conceptual)
-Asegúrate de tener Terraform instalado y las credenciales del proveedor de nube configuradas.
-
-Navega al directorio iac.
-
-Inicializa Terraform: terraform init
-
-Aplica la configuración: terraform apply
+---
