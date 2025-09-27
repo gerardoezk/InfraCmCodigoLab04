@@ -1,32 +1,36 @@
 ---
+# Playbook de Ansible para configurar un proxy NGINX con 3 backends
 - name: Configurar NGINX proxy con 3 backends
-  hosts: localhost
-  gather_facts: false
-  vars:
-    project_root: "{{ playbook_dir }}/.."
-    nginx_conf_host: "{{ project_root }}/host_volumes/nginx_conf/"
-    web1_host: "{{ project_root }}/host_volumes/web1"
-    web2_host: "{{ project_root }}/host_volumes/web2"
-    web3_host: "{{ project_root }}/host_volumes/web3"
-    nginx_container: "proxy"
+  hosts: localhost          # Se ejecuta en la máquina local (definida en inventory.ini)
+  gather_facts: false       # No se recopilan datos del sistema (optimiza velocidad)
+  
+  vars:                     # Variables reutilizables en el playbook
+    project_root: "{{ playbook_dir }}/.."                 # Ruta raíz del proyecto
+    nginx_conf_host: "{{ project_root }}/host_volumes/nginx_conf/" # Carpeta de config NGINX
+    web1_host: "{{ project_root }}/host_volumes/web1"     # Carpeta para la web1
+    web2_host: "{{ project_root }}/host_volumes/web2"     # Carpeta para la web2
+    web3_host: "{{ project_root }}/host_volumes/web3"     # Carpeta para la web3
+    nginx_container: "proxy"                             # Nombre del contenedor NGINX
 
   tasks:
+    # 1. Crear directorios necesarios para NGINX y las webs
     - name: Crear directorios para proxy y webs
       ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        mode: '0755'
-      loop:
+        path: "{{ item }}"   # Cada ruta definida en el loop
+        state: directory     # Crea un directorio
+        mode: '0755'         # Permisos: lectura y ejecución global, escritura solo para dueño
+      loop:                  # Se repite para cada carpeta listada
         - "{{ nginx_conf_host }}"
         - "{{ web1_host }}"
         - "{{ web2_host }}"
         - "{{ web3_host }}"
 
+    # 2. Copiar archivos HTML de prueba (web1, web2, web3)
     - name: Copiar web1
       ansible.builtin.copy:
-        src: "files/index1.html"
-        dest: "{{ web1_host }}/index.html"
-        mode: '0644'
+        src: "files/index1.html"             # Archivo origen en carpeta "files"
+        dest: "{{ web1_host }}/index.html"   # Destino dentro de la carpeta web1
+        mode: '0644'                         # Permisos: lectura global, escritura solo para dueño
 
     - name: Copiar web2
       ansible.builtin.copy:
@@ -40,20 +44,23 @@
         dest: "{{ web3_host }}/index.html"
         mode: '0644'
 
+    # 3. Copiar la configuración personalizada de NGINX
     - name: Copiar configuración del proxy
       ansible.builtin.copy:
-        src: "templates/nginx.conf"
-        dest: "{{ nginx_conf_host }}/default.conf"
+        src: "templates/nginx.conf"                  # Archivo de configuración en "templates"
+        dest: "{{ nginx_conf_host }}/default.conf"   # Ruta donde NGINX leerá su config
         mode: '0644'
 
+    # 4. Intentar recargar NGINX dentro del contenedor
     - name: Recargar NGINX en el proxy
       ansible.builtin.command:
-        docker exec {{ nginx_container }} nginx -s reload
-      register: reload_result
-      changed_when: reload_result.rc == 0
-      failed_when: false
+        docker exec {{ nginx_container }} nginx -s reload  # Recarga configuración sin apagar el contenedor
+      register: reload_result       # Guarda el resultado de la ejecución
+      changed_when: reload_result.rc == 0   # Marca como "cambiado" si el comando fue exitoso
+      failed_when: false                     # Evita que falle aunque el comando dé error
 
+    # 5. Si la recarga falla, reiniciar el contenedor completo
     - name: Reiniciar proxy si recarga falla
       ansible.builtin.command:
-        docker restart {{ nginx_container }}
-      when: reload_result.rc != 0
+        docker restart {{ nginx_container }}   # Reinicia el contenedor "proxy"
+      when: reload_result.rc != 0              # Solo se ejecuta si la recarga falló
